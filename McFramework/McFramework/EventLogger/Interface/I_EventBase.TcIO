@@ -4,7 +4,7 @@
     <Declaration><![CDATA[INTERFACE I_EventBase
 ]]></Declaration>
     <Method Name="Clear" Id="{b0b2854d-9854-4b39-826f-5f9f2e3e706a}">
-      <Declaration><![CDATA[METHOD Clear : BOOL
+      <Declaration><![CDATA[METHOD Clear : HRESULT
 VAR_INPUT
 END_VAR
 ]]></Declaration>
