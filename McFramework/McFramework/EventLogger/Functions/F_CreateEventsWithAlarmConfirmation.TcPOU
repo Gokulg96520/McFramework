@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.14">
+  <POU Name="F_CreateEventsWithAlarmConfirmation" Id="{3e5aa412-eadc-4633-a068-032bdb0122db}" SpecialFunc="None">
+    <Declaration><![CDATA[(*Initializes event with confirmation flag function blocks for an entire event class using auto generated source info
+	Return Type is HRESULT  0-> Success
+							10000 -> Number/Array Size of FB_Alarms is more than the Number of Events Defined (Event Class Defination Alarm are Initalized)
+						   -10000 -> Alarms & AlarmsConfirmationFlag Array Size are Mismatch
+						   -10001 -> HRESULT FAILED (TcAlarms.CreateEx Returned a Error)*)
+{attribute 'hide_all_locals'}						  
+FUNCTION F_CreateEventsWithAlarmConfirmation : HRESULT;
+VAR_IN_OUT
+	Alarms : ARRAY[*] OF FB_TcAlarm; //Array of Alarms to be Initialized
+	AlarmsConfirmationFlag : ARRAY[*] OF BOOL; //Array of Alarms Confirmation Flag ( True -> Alarm With Confirmation / False-> Alarm Without Confirmation)
+END_VAR
+VAR_INPUT
+	ClassSize  : UDINT;					  //Size in bytes of the event class
+	pInitEvent : POINTER TO TcEventEntry; //Address of first event in Event Class (Should be the InitReferenceEvent)
+	Prefix	   : STRING;				  //String Prefix for the Event Message - Usually the Component ID and Name
+END_VAR
+VAR
+	i			   : UDINT;
+	EventSize	   : UDINT;
+	numberOfEvents : UDINT;
+	pEvent		   : POINTER TO TcEventEntry;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF ((UPPER_BOUND(Alarms,1) <> (UPPER_BOUND(AlarmsConfirmationFlag,1)) THEN
+	F_CreateEventsWithAlarmConfirmation := -10000 ; 
+	RETURN;
+END_IF
+
+EventSize	   := SIZEOF(pInitEvent^);
+numberOfEvents := ClassSize / EventSize;
+FOR i := TO_UDINT(LOWER_BOUND(Alarms, 1)) TO TO_UDINT(UPPER_BOUND(Alarms, 1)) DO
+	IF i > numberOfEvents THEN
+		F_CreateEventsWithAlarmConfirmation := 10000;
+		RETURN;
+	ELSE
+		pEvent := pInitEvent + ((i - 1) * EventSize);
+		IF FAILED(Alarms[i].CreateEx(stEventEntry := pEvent^, AlarmsConfirmationFlag[i], 0)) THEN 
+			F_CreateEventsWithAlarmConfirmation := -10001;
+			RETURN;
+		END_IF
+		Alarms[i].ipArguments.AddString(Prefix);
+	END_IF
+END_FOR
+
+F_CreateEventsWithAlarmConfirmation := 0;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
