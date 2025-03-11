@@ -22,7 +22,7 @@ END_VAR
 	END_IF
 ELSIF Alarm.bRaised THEN
 	F_Raise := 10001;
-ELSIF Alarm.bRaised THEN	
+ELSIF Alarm.bActive THEN	
 	F_Raise := 10002;
 END_IF]]></ST>
     </Implementation>
