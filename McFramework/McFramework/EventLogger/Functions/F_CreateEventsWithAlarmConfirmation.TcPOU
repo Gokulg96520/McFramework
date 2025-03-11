@@ -25,7 +25,7 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF ((UPPER_BOUND(Alarms,1) <> (UPPER_BOUND(AlarmsConfirmationFlag,1)) THEN
+      <ST><![CDATA[IF ((UPPER_BOUND(Alarms,1)) <> (UPPER_BOUND(AlarmsConfirmationFlag,1))) THEN
 	F_CreateEventsWithAlarmConfirmation := -10000 ; 
 	RETURN;
 END_IF
