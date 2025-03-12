@@ -14,20 +14,24 @@ VAR_IN_OUT
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF Alarm.eConfirmationState = TcEventConfirmationState.WaitForConfirmation THEN
-	IF FAILED(Alarm.Confirm(0)) THEN
-		F_Confirm := -10003;
-		RETURN;
-	ELSE
-		F_Confirm := 0;
+      <ST><![CDATA[IF Alarm.bActive OR Alarm.bRaised THEN
+	IF Alarm.eConfirmationState = TcEventConfirmationState.WaitForConfirmation THEN
+		IF FAILED(Alarm.Confirm(0)) THEN
+			F_Confirm := -10003;
+			RETURN;
+		ELSE
+			F_Confirm := 0;
+		END_IF
+	ELSIF Alarm.eConfirmationState = TcEventConfirmationState.NotSupported  THEN
+		F_Confirm := 10003;	
+	ELSIF Alarm.eConfirmationState = TcEventConfirmationState.Confirmed  THEN
+		F_Confirm := 10005;
 	END_IF
-ELSIF Alarm.eConfirmationState = TcEventConfirmationState.Confirmed  THEN
-	F_Confirm := 10005;
-ELSIF Alarm.eConfirmationState = TcEventConfirmationState.NotSupported  THEN
-	F_Confirm := 10003;
-ELSIF Alarm.eConfirmationState = TcEventConfirmationState.NotRequired  THEN
+ELSE
 	F_Confirm := 10004;
-END_IF]]></ST>
+END_IF
+
+]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>
