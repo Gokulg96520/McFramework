@@ -3,7 +3,7 @@
   <POU Name="F_Raise" Id="{3930de4b-bbcb-49d3-8aa1-7879b0cf9265}" SpecialFunc="None">
     <Declaration><![CDATA[(*Raises an alarm
 	Return Type is HRESULT  0-> Success 
-						   	10001-> Alarm already Raised
+						   	10001-> Alarm already Raised should be Cleared First
 							10002 -> Alarm already Raised waiting for Confirmation
 						   -10002 -> HRESULT FAILED (TcAlarms.Raise Returned a Error) *)
 {attribute 'hide_all_locals'}						  
@@ -20,9 +20,9 @@ END_VAR
 	ELSE
 		F_Raise := 0;
 	END_IF
-ELSIF Alarm.bRaised THEN
+ELSIF (Alarm.bRaised OR Alarm.bActive) AND Alarm.eConfirmationState = TcEventConfirmationState.NotSupported  THEN
 	F_Raise := 10001;
-ELSIF Alarm.bActive THEN	
+ELSIF (Alarm.bRaised OR Alarm.bActive) AND Alarm.eConfirmationState = TcEventConfirmationState.WaitForConfirmation THEN	
 	F_Raise := 10002;
 END_IF]]></ST>
     </Implementation>
