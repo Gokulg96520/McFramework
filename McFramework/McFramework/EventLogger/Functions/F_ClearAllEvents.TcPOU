@@ -31,7 +31,7 @@ END_VAR
 			ErrorInClearingEventsWithConfirmation := TRUE;
 		END_IF
 	ELSIF Alarms[i].eConfirmationState = TcEventConfirmationState.WaitForConfirmation THEN
-			EventNotComfirmed := TRUE;
+			EventsNotComfirmed := TRUE;
 	END_IF
 END_FOR
 
@@ -40,7 +40,7 @@ IF ErrorInClearingEventsWithoutConfirmation THEN
 ELSIF ErrorInClearingEventsWithConfirmation THEN
 	F_ClearAllEvents := -10005;
 ELSIF EventsNotComfirmed THEN
-	F_ClearAllEvents := -10006;
+	F_ClearAllEvents := 10006;
 ELSE
 	F_ClearAllEvents := 0;
 END_IF
