@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.14">
+  <POU Name="FB_Base" Id="{51393f70-e820-4dcc-9178-4095bf91b7d5}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'hide_all_locals'}
+FUNCTION_BLOCK ABSTRACT FB_Base IMPLEMENTS I_Base
+VAR
+	_Done	 : BOOL;
+	_Busy	 : BOOL := TRUE;
+	_Error	 : BOOL;
+	_ErrorID : UDINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+]]></ST>
+    </Implementation>
+    <Folder Name="Methods" Id="{c92f008c-5d15-4095-80e4-bd85ac35c1be}" />
+    <Folder Name="Properties" Id="{1e57a204-d960-4c56-a183-c96912ecfab1}" />
+    <Property Name="Busy" Id="{3e3dbeb8-55ae-4cff-8cd0-3cf5f048f3f7}" FolderPath="Properties\">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY Busy : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{e4e6490c-82d1-4b3d-b952-ed179b5dfb32}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Busy := _Busy;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Done" Id="{86ce6dea-c0e9-4737-a519-ced2f6a539b6}" FolderPath="Properties\">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY Done : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{1b3c71d8-212e-4cb7-a1b0-3d2c76d80943}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Done := _Done;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Error" Id="{982386b2-5e89-46c0-af03-e517726b03cc}" FolderPath="Properties\">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY Error : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{d84740ef-da2e-47f0-9c7f-ead392ce2f8d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Error := _Error;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ErrorID" Id="{a199a626-e64a-452b-8c6c-2026beee7a16}" FolderPath="Properties\">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY ErrorID : UDINT
+]]></Declaration>
+      <Get Name="Get" Id="{90986a62-aa9a-4192-9c08-b94945153799}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ErrorID := _ErrorID;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>
