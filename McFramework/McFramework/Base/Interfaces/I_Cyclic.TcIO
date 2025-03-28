@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.14">
+  <Itf Name="I_Cyclic" Id="{98a1eaf4-08c0-471e-82d4-eb2d7fb645b7}">
+    <Declaration><![CDATA[INTERFACE I_Cyclic EXTENDS I_Base
+]]></Declaration>
+    <Folder Name="Methods" Id="{ae7d0a2c-a37f-41e8-bbad-27f20ac153fe}" />
+    <Folder Name="Properties" Id="{2134fa10-45da-4a16-9ef1-542792a88b42}" />
+    <Method Name="CyclicLogic" Id="{ab56a435-5d01-41e9-afff-00b72d8e3c0f}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD CyclicLogic : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="InitCompleted" Id="{754992be-0c43-4d96-b5c5-0dc5aa945203}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY InitCompleted : Bool]]></Declaration>
+      <Get Name="Get" Id="{164716b1-2930-4265-8b52-d8dd9f3d8dc3}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>
