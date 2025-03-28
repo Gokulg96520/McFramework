@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.14">
+  <Itf Name="I_ComponentBase" Id="{9e5694a3-27f3-4799-8b1e-d3da44d6be86}">
+    <Declaration><![CDATA[INTERFACE I_ComponentBase EXTENDS I_Base
+]]></Declaration>
+    <Folder Name="Methods" Id="{1e2e9b13-8035-499a-b994-72999b980d9e}" />
+    <Folder Name="Properties" Id="{253b39ea-054f-4168-a4fb-b621c19f84e8}" />
+    <Method Name="AllowHMIControl" Id="{0dc61043-a0c4-48c3-bf79-c3b3d185c81e}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD AllowHMIControl
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="BlockHMIControl" Id="{13beeb00-1a58-495c-8e9e-479a85cd7211}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD BlockHMIControl 
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="CurrentAlarmSeverity" Id="{77d85cd6-9dc8-40a3-b94b-a66fee89834f}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY CurrentAlarmSeverity : TcEventSeverity]]></Declaration>
+      <Get Name="Get" Id="{ab95067c-f7b0-450d-b5e2-ab7c12ff6232}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="InSimulation" Id="{2f6a6102-2fd3-43af-871c-13ac4383092a}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY InSimulation : Bool]]></Declaration>
+      <Get Name="Get" Id="{a77f9960-2ef4-4fcd-a23f-8767b1ac8142}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{0a6c4719-2d36-4a6a-bbb0-b0b5ea45e1d1}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="Name" Id="{a26bdb86-fe9d-474f-bcaa-1df8613d0cb8}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Name : String]]></Declaration>
+      <Get Name="Get" Id="{77076a69-c81d-42cb-9044-99e46338a24c}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{aff21efc-e535-4d77-8755-f342ed6752a4}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Method Name="Reset" Id="{30edff56-7568-45fa-b6e7-07d6ee74dcf3}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Reset
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>
