@@ -3,7 +3,6 @@
   <Itf Name="I_Base" Id="{e28f02d3-80c8-4cf4-984c-d5994be10a9f}">
     <Declaration><![CDATA[INTERFACE I_Base
 ]]></Declaration>
-    <Folder Name="Methods" Id="{7b4cf7d2-0e52-4217-b265-dc50872cbbff}" />
     <Folder Name="Properties" Id="{15324833-6475-461c-b2e2-23a101e1013b}" />
     <Property Name="Busy" Id="{35a9da76-daa5-4c40-88c6-b0135733439f}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY Busy : Bool]]></Declaration>
@@ -11,12 +10,6 @@
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Method Name="CyclicLogic" Id="{207d1917-8cdc-4c86-aa75-7727fc3d81e9}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD CyclicLogic : BOOL
-VAR_INPUT
-END_VAR
-]]></Declaration>
-    </Method>
     <Property Name="Done" Id="{52940905-09b5-41d4-a583-16de5914e142}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY Done : Bool]]></Declaration>
       <Get Name="Get" Id="{bb86aeff-a68a-47ea-a1d3-5838ae8d7eb1}">
@@ -32,12 +25,6 @@ END_VAR
     <Property Name="ErrorID" Id="{b10cdd15-a1b0-4247-9b95-ef52b9e30e2f}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY ErrorID : UDINT]]></Declaration>
       <Get Name="Get" Id="{8de0f140-5323-494f-a596-403d956fb360}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
-    <Property Name="InitCompleted" Id="{b3821ef7-a0de-415c-bcb0-88b66d6be785}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY InitCompleted : Bool]]></Declaration>
-      <Get Name="Get" Id="{d47b922c-705e-4b3f-910a-84620011475a}">
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
