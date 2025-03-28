@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.14">
+  <POU Name="FB_Cyclic" Id="{b52f827f-edb9-4b5a-b1d9-3112b134d109}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK ABSTRACT FB_Cyclic EXTENDS FB_Base IMPLEMENTS I_Cyclic
+VAR
+	_InitCompleted : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Methods" Id="{091563a2-2114-4d7e-9a99-1aa5cdaa3f65}" />
+    <Folder Name="Properties" Id="{e6fe3d3a-8188-4c70-bd35-6a995c218a13}" />
+    <Method Name="CyclicLogic" Id="{25d97232-7a76-4aec-bdd5-31f940f4d8f8}" FolderPath="Methods\">
+      <Declaration><![CDATA[{warning 'add method implementation '}
+METHOD CyclicLogic : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="InitCompleted" Id="{e3b13183-b852-4644-aecd-ea5e517dc9f4}" FolderPath="Properties\">
+      <Declaration><![CDATA[{warning 'add property implementation'}
+PROPERTY InitCompleted : BOOL
+]]></Declaration>
+      <Get Name="Get" Id="{81bd1a58-ed2a-43f6-9626-1039008d36a6}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[InitCompleted := _InitCompleted;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+  </POU>
+</TcPlcObject>
