@@ -1,0 +1,300 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.14">
+  <POU Name="FB_EventLogger_Test" Id="{3ab24f68-94c4-4657-8d92-7872a35a162d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_EventLogger_Test EXTENDS FB_TestSuite
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[CreateEvents();
+CreateEventsWithAlarmConfirmation();
+RaiseEvents();
+ConfirmEvents();
+ClearAllEvents();]]></ST>
+    </Implementation>
+    <Method Name="ClearAllEvents" Id="{f1ba3c06-1cdf-4e9b-aec3-06ce6f1ffba9}">
+      <Declaration><![CDATA[METHOD ClearAllEvents
+VAR
+	ArrayOfAlarmsWithTwoAlarms : ARRAY[1..2] OF FB_TcAlarm; //Defined Only 2 Events in Type Systems
+	AlarmsConfirmationRequiredFlag : ARRAY[1..2] OF BOOL := [0,1]; //Alarm Confirmation Required Flag
+	Result: HRESULT;
+	ResultExpected : HRESULT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ClearAllEvents');
+
+	//Create Event Class
+	F_CreateEventsWithAlarmConfirmation(
+										Alarms:=ArrayOfAlarmsWithTwoAlarms, 
+										AlarmsConfirmationFlag:=AlarmsConfirmationRequiredFlag, 
+										ClassSize:=SIZEOF(TC_EVENTS.EventLoggerTesting), 
+										pInitEvent:=ADR(TC_EVENTS.EventLoggerTesting.AlramWithoutConf), 
+										Prefix:='F_CreateEventsWithAlarmConfirmation');	 		
+	
+	// Test 0 Success
+	F_Raise(Alarm:=ArrayOfAlarmsWithTwoAlarms[1]); //Raise
+	F_Raise(Alarm:=ArrayOfAlarmsWithTwoAlarms[2]); //Raise
+	F_Confirm(Alarm:=ArrayOfAlarmsWithTwoAlarms[2]); //Confirm
+	Result := F_ClearAllEvents(ArrayOfAlarmsWithTwoAlarms); //Clear 
+	ResultExpected := 0;
+	AssertEquals(Expected:=ResultExpected,Actual:=Result,Message:='Clear All Events is Not Sucessful');
+	
+	// Test 10006 Success Events with Confirmation is not confirmed, First confirm the events then call F_ClearAllEvents
+	F_Raise(Alarm:=ArrayOfAlarmsWithTwoAlarms[1]); //Raise
+	F_Raise(Alarm:=ArrayOfAlarmsWithTwoAlarms[2]); //Raise
+	Result := F_ClearAllEvents(ArrayOfAlarmsWithTwoAlarms); //Clear 
+	F_Confirm(Alarm:=ArrayOfAlarmsWithTwoAlarms[2]); //Confirm
+	F_ClearAllEvents(ArrayOfAlarmsWithTwoAlarms); //Clear 
+	ResultExpected := 10006;
+	AssertEquals(Expected:=ResultExpected,Actual:=Result,Message:='Simulation of Info Failed Events with Confirmation is not confirmed, First confirm the events then call F_ClearAllEvents');
+	
+	(*// Test -10005 HRESULT FAILED (TcAlarms.Clear Returned a Error) for Alarm with Confirmation
+	ResultExpected := ;
+	AssertEquals(Expected:=ResultExpected,Actual:=Result,Message:='Simulation of Error HRESULT FAILED (TcAlarms.Clear Returned a Error) for Alarm with Confirmation');
+	*)
+	
+TEST_FINISHED();
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ConfirmEvents" Id="{11c5804e-b69e-4103-9065-cff0a73550eb}">
+      <Declaration><![CDATA[METHOD ConfirmEvents
+VAR
+	ArrayOfAlarmsWithTwoAlarms : ARRAY[1..2] OF FB_TcAlarm; //Defined Only 2 Events in Type Systems
+	AlarmsConfirmationRequiredFlag : ARRAY[1..2] OF BOOL := [0,1]; //Alarm Confirmation Required Flag
+	Result: HRESULT;
+	ResultExpected : HRESULT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('ConfirmEvents');
+
+	//Create Event Class
+	F_CreateEventsWithAlarmConfirmation(
+										Alarms:=ArrayOfAlarmsWithTwoAlarms, 
+										AlarmsConfirmationFlag:=AlarmsConfirmationRequiredFlag, 
+										ClassSize:=SIZEOF(TC_EVENTS.EventLoggerTesting), 
+										pInitEvent:=ADR(TC_EVENTS.EventLoggerTesting.AlramWithoutConf), 
+										Prefix:='F_CreateEventsWithAlarmConfirmation');	 		
+	
+	// Test 0 Success
+	F_Raise(Alarm:=ArrayOfAlarmsWithTwoAlarms[2]); //Raise
+	Result := F_Confirm(Alarm:=ArrayOfAlarmsWithTwoAlarms[2]); //Confirm
+	F_ClearAllEvents(ArrayOfAlarmsWithTwoAlarms); //Clear 
+	ResultExpected := 0;
+	AssertEquals(Expected:=ResultExpected,Actual:=Result,Message:='Confirm Event is Not Sucessful');
+	
+	// Test 10003 Alarm Initialized without confirmation
+	F_Raise(Alarm:=ArrayOfAlarmsWithTwoAlarms[1]); //Raise
+	Result := F_Confirm(Alarm:=ArrayOfAlarmsWithTwoAlarms[1]); //Confirm
+	F_ClearAllEvents(ArrayOfAlarmsWithTwoAlarms); //Clear 
+	ResultExpected := 10003;
+	AssertEquals(Expected:=ResultExpected,Actual:=Result,Message:='Simulation of Info Failed Alarm Initialized without confirmation');
+	
+	// Test 10004 Alarm Not Raised 
+	Result := F_Confirm(Alarm:=ArrayOfAlarmsWithTwoAlarms[2]); //Confirm
+	ResultExpected := 10004;
+	AssertEquals(Expected:=ResultExpected,Actual:=Result,Message:='Simulation of Info Failed Alarm Not Raised ');
+	
+	// Test 10005 Alarm already confirmed
+	F_Raise(Alarm:=ArrayOfAlarmsWithTwoAlarms[2]); //Raise
+	F_Confirm(Alarm:=ArrayOfAlarmsWithTwoAlarms[2]); //Confirm
+	Result := F_Confirm(Alarm:=ArrayOfAlarmsWithTwoAlarms[2]); //Confirm
+	F_ClearAllEvents(ArrayOfAlarmsWithTwoAlarms); //Clear
+	ResultExpected := 10005;
+	AssertEquals(Expected:=ResultExpected,Actual:=Result,Message:='Simulation of Info Failed Alarm already confirmed ');
+	
+	(*
+	// Test -10003 HRESULT FAILED (TcAlarms.Confirm Returned a Error)
+	Result := ;
+	ResultExpected := -10002;
+	AssertEquals(Expected:=ResultExpected,Actual:=Result,Message:='Simulation of Error HRESULT FAILED (TcAlarms.Confirm Returned a Error)');
+	*)
+	
+TEST_FINISHED();
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CreateEvents" Id="{2f3bedc9-9b43-4c4e-9716-fea2fb67ffb4}">
+      <Declaration><![CDATA[METHOD CreateEvents
+VAR
+	ArrayOfAlarmsWithTwoAlarms : ARRAY[1..2] OF FB_TcAlarm; //Defined Only 2 Events in Type Systems
+	AlarmsOfAlarmsWithThreeAlarms : ARRAY[1..3] OF FB_TcAlarm; //Defined Only 2 Events in Type Systems
+	Result: HRESULT;
+	ResultExpected : HRESULT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('CreateEvents');
+
+	// Test 0 Success
+	Result := F_Create(
+						Alarms:=ArrayOfAlarmsWithTwoAlarms, 
+						ClassSize:=SIZEOF(TC_EVENTS.EventLoggerTesting), 
+						pInitEvent:=ADR(TC_EVENTS.EventLoggerTesting.AlramWithoutConf), 
+						Prefix:= 'CreateEvents'); 		
+	ResultExpected := 0;
+	AssertEquals(Expected:=ResultExpected,Actual:=Result,Message:='Event Create Not Sucessful ');
+	
+	// Test 10000 Number/Array Size of FB_Alarms is more than the Number of Events Defined (Event Class Defination Alarms are Initalized)
+	Result := F_Create(
+						Alarms:=AlarmsOfAlarmsWithThreeAlarms, 
+						ClassSize:=SIZEOF(TC_EVENTS.EventLoggerTesting), 
+						pInitEvent:=ADR(TC_EVENTS.EventLoggerTesting.AlramWithConf), 
+						Prefix:= 'CreateEvents'); 		
+	ResultExpected := 10000;
+	AssertEquals(Expected:=ResultExpected,Actual:=Result,Message:='Simulation of Info Failed Number/Array Size of FB_Alarms is more than the Number of Events Defined (Event Class Defination Alarms are Initalized)');
+	
+	// Test -10001 HRESULT FAILED (TcAlarms.CreateEx Returned a Error) How can i simulate Error
+	(*
+	Result := F_Create(
+						Alarms:=ArrayOfAlarmsWithTwoAlarms, 
+						ClassSize:=SIZEOF(TC_EVENTS.EventLoggerTesting), 
+						pInitEvent:=ADR(TC_EVENTS.EventLoggerTesting.AlramWithoutConf), 
+						Prefix:= 'CreateEvents'); 		
+	ResultExpected := -10001;
+	AssertEquals(Expected:=ResultExpected,Actual:=Result,Message:='Simulation of Error Failed HRESULT FAILED (TcAlarms.CreateEx Returned a Error)');
+	*)
+	
+	
+
+TEST_FINISHED();
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CreateEventsWithAlarmConfirmation" Id="{09fa05a6-b0d4-4c6b-9df4-2e8f09798d80}">
+      <Declaration><![CDATA[METHOD CreateEventsWithAlarmConfirmation
+VAR
+	ArrayOfAlarmsWithTwoAlarms : ARRAY[1..2] OF FB_TcAlarm; //Defined Only 2 Events in Type Systems
+	ArrayOfAlarmsWithTwoAlarmsConfirmationRequiredFlag : ARRAY[1..2] OF BOOL := [0,1]; //Alarm with Confirmation Flag 
+	
+	AlarmsOfAlarmsWithThreeAlarms : ARRAY[1..3] OF FB_TcAlarm; //Defined Only 2 Events in Type Systems
+	ArrayOfAlarmsWithThreeAlarmsConfirmationRequiredFlag : ARRAY[1..3] OF BOOL := [0,1,1]; //Alarm with Confirmation Flag 
+	
+	Result: HRESULT;
+	ResultExpected : HRESULT;
+
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('F_CreateEventsWithAlarmConfirmation');
+
+	// Test 0 Success
+	Result := F_CreateEventsWithAlarmConfirmation(
+													Alarms:=ArrayOfAlarmsWithTwoAlarms, 
+													AlarmsConfirmationFlag:=ArrayOfAlarmsWithTwoAlarmsConfirmationRequiredFlag, 
+													ClassSize:=SIZEOF(TC_EVENTS.EventLoggerTesting), 
+													pInitEvent:=ADR(TC_EVENTS.EventLoggerTesting.AlramWithoutConf), 
+													Prefix:='F_CreateEventsWithAlarmConfirmation');		
+	ResultExpected := 0;
+	AssertEquals(Expected:=ResultExpected,Actual:=Result,Message:='Event Create Not Sucessful ');
+	
+	// Test 10000 Number/Array Size of FB_Alarms is more than the Number of Events Defined (Event Class Defination Alarms are Initalized)
+	Result := F_CreateEventsWithAlarmConfirmation(
+													Alarms:=AlarmsOfAlarmsWithThreeAlarms, 
+													AlarmsConfirmationFlag:=ArrayOfAlarmsWithThreeAlarmsConfirmationRequiredFlag, 
+													ClassSize:=SIZEOF(TC_EVENTS.EventLoggerTesting), 
+													pInitEvent:=ADR(TC_EVENTS.EventLoggerTesting.AlramWithoutConf), 
+													Prefix:='F_CreateEventsWithAlarmConfirmation');			
+	ResultExpected := 10000;
+	AssertEquals(Expected:=ResultExpected,Actual:=Result,Message:='Simulation of Info Failed Number/Array Size of FB_Alarms is more than the Number of Events Defined (Event Class Defination Alarms are Initalized)');
+	
+	// Test -10000 Alarms & AlarmsConfirmationFlag Array Size Mismatch
+	Result := F_CreateEventsWithAlarmConfirmation(
+													Alarms:=ArrayOfAlarmsWithTwoAlarms, 
+													AlarmsConfirmationFlag:=ArrayOfAlarmsWithThreeAlarmsConfirmationRequiredFlag, 
+													ClassSize:=SIZEOF(TC_EVENTS.EventLoggerTesting), 
+													pInitEvent:=ADR(TC_EVENTS.EventLoggerTesting.AlramWithoutConf), 
+													Prefix:='F_CreateEventsWithAlarmConfirmation');	 		
+	ResultExpected := -10000;
+	AssertEquals(Expected:=ResultExpected,Actual:=Result,Message:='Simulation of Error Failed Alarms & AlarmsConfirmationFlag Array Size Mismatch');
+
+	// Test -10001 HRESULT FAILED (TcAlarms.CreateEx Returned a Error) How can i simulate Error
+	(*
+	Result := F_CreateEventsWithAlarmConfirmation(
+													Alarms:=AlarmsSizeMismatch, 
+													AlarmsConfirmationFlag:=AlarmsFlag, 
+													ClassSize:=SIZEOF(TC_EVENTS.EventLoggerTesting), 
+													pInitEvent:=ADR(TC_EVENTS.EventLoggerTesting.AlramWithoutConf), 
+													Prefix:='F_CreateEventsWithAlarmConfirmation');
+	ResultExpected := -10001;
+	AssertEquals(Expected:=ResultExpected,Actual:=Result,Message:='Simulation of Error Failed HRESULT FAILED (TcAlarms.CreateEx Returned a Error)');
+	*)
+
+TEST_FINISHED();
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RaiseEvents" Id="{3c8cbf45-1c47-479f-8707-8b19e4d11d13}">
+      <Declaration><![CDATA[METHOD RaiseEvents
+VAR
+	ArrayOfAlarmsWithTwoAlarms : ARRAY[1..2] OF FB_TcAlarm; //Defined Only 2 Events in Type Systems
+	AlarmsConfirmationRequiredFlag : ARRAY[1..2] OF BOOL := [0,1]; //Alarm Confirmation Required Flag
+	Result: HRESULT;
+	ResultExpected : HRESULT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('RaiseEvents');
+
+	//Create Event Class
+	F_CreateEventsWithAlarmConfirmation(
+										Alarms:=ArrayOfAlarmsWithTwoAlarms, 
+										AlarmsConfirmationFlag:=AlarmsConfirmationRequiredFlag, 
+										ClassSize:=SIZEOF(TC_EVENTS.EventLoggerTesting), 
+										pInitEvent:=ADR(TC_EVENTS.EventLoggerTesting.AlramWithoutConf), 
+										Prefix:='F_CreateEventsWithAlarmConfirmation');	 		
+	
+	// Test 0 Success
+	Result := F_Raise(Alarm:=ArrayOfAlarmsWithTwoAlarms[1]); //Raise
+	F_ClearAllEvents(ArrayOfAlarmsWithTwoAlarms); //Clear 
+	ResultExpected := 0;
+	AssertEquals(Expected:=ResultExpected,Actual:=Result,Message:='RaiseEvent is Not Sucessful');
+	
+
+	// Test 10001 Alarm already Raised should be Cleared First
+	F_Raise(Alarm:=ArrayOfAlarmsWithTwoAlarms[1]); //Raise
+	Result := F_Raise(Alarm:=ArrayOfAlarmsWithTwoAlarms[1]); //Again Raise
+	F_ClearAllEvents(ArrayOfAlarmsWithTwoAlarms); //Clear 
+	ResultExpected := 10001;
+	AssertEquals(Expected:=ResultExpected,Actual:=Result,Message:='Simulation of Info Failed Alarm already Raised');
+	
+	// Test 10002 Alarm already Raised waiting for Confirmation
+	F_Raise(Alarm:=ArrayOfAlarmsWithTwoAlarms[2]); //Raise
+	Result := F_Raise(Alarm:=ArrayOfAlarmsWithTwoAlarms[2]); //Again Raise 
+	F_Confirm(Alarm:=ArrayOfAlarmsWithTwoAlarms[2]); //Confirm  
+	F_ClearAllEvents(ArrayOfAlarmsWithTwoAlarms); //Clear 
+	ResultExpected := 10002;
+	AssertEquals(Expected:=ResultExpected,Actual:=Result,Message:='Simulation of Info Failed Alarm already Raised waiting for Confirmation');
+	
+	(*
+	// Test -10002 HRESULT FAILED (TcAlarms.Raise Returned a Error) How can i simulate Error
+	Result := ;
+	ResultExpected := -10002;
+	AssertEquals(Expected:=ResultExpected,Actual:=Result,Message:='Simulation of Error Failed HRESULT FAILED (TcAlarms.Raise Returned a Error)');
+	*)
+	
+	
+
+TEST_FINISHED();
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

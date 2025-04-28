@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.14">
+  <Itf Name="I_EventBase" Id="{5e78eace-093f-43b4-9a3c-92dc170144de}">
+    <Declaration><![CDATA[INTERFACE I_EventBase
+]]></Declaration>
+    <Method Name="Clear" Id="{b0b2854d-9854-4b39-826f-5f9f2e3e706a}">
+      <Declaration><![CDATA[METHOD Clear : HRESULT
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="ClearAllEvents" Id="{9e60c04a-1a60-464a-b40f-f78409187b2f}">
+      <Declaration><![CDATA[METHOD ClearAllEvents : HRESULT
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Confirm" Id="{8030da31-0c7b-41e3-8f25-4700077e9568}">
+      <Declaration><![CDATA[METHOD Confirm : HRESULT
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Create" Id="{f3b622be-6e0e-4718-865a-ad8f829fe210}">
+      <Declaration><![CDATA[METHOD Create : HRESULT
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Raise" Id="{4c4af0e7-a4bd-4446-a127-69fa8c2edefc}">
+      <Declaration><![CDATA[METHOD Raise : HRESULT
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

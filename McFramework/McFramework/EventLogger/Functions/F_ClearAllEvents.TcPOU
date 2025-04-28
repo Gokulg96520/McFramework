@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.14">
+  <POU Name="F_ClearAllEvents" Id="{6c5aaee9-d251-4353-82ca-78210be01dbb}" SpecialFunc="None">
+    <Declaration><![CDATA[(*Clear all the raised alarm (Note: Alarm with confirmation will not be cleared before confirmation)
+	Return Type is HRESULT  0-> Success 
+						   -10004 -> HRESULT FAILED (TcAlarms.Clear Returned a Error) for Alarm without Confirmation
+						   -10005 -> HRESULT FAILED (TcAlarms.Clear Returned a Error) for Alarm with Confirmation
+						   -10006 -> Events with Confirmation is not confirmed, First confirm the events then call F_ClearAllEvents
+ *)
+{attribute 'hide_all_locals'}						  
+FUNCTION F_ClearAllEvents : HRESULT;
+VAR_IN_OUT
+	Alarms : ARRAY[*] OF FB_TcAlarm; //Array of Alarms to be Cleared
+END_VAR
+VAR
+	i : DINT;
+	AllEventNotClearedFlag : BOOL;
+	ErrorInClearingEventsWithoutConfirmation: BOOL;
+	ErrorInClearingEventsWithConfirmation: BOOL;
+	EventsNotComfirmed: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[FOR i := LOWER_BOUND(Alarms, 1) TO UPPER_BOUND(Alarms, 1) DO
+	IF Alarms[i].bRaised AND Alarms[i].eConfirmationState = TcEventConfirmationState.NotSupported THEN
+		IF FAILED(Alarms[i].Clear(0, 0)) THEN
+			ErrorInClearingEventsWithoutConfirmation := TRUE;
+		END_IF
+	ELSIF Alarms[i].eConfirmationState = TcEventConfirmationState.Confirmed  THEN
+		IF FAILED(Alarms[i].Clear(0, 0)) THEN
+			ErrorInClearingEventsWithConfirmation := TRUE;
+		END_IF
+	ELSIF Alarms[i].eConfirmationState = TcEventConfirmationState.WaitForConfirmation THEN
+			EventsNotComfirmed := TRUE;
+	END_IF
+END_FOR
+
+IF ErrorInClearingEventsWithoutConfirmation THEN 
+	F_ClearAllEvents := -10004;
+ELSIF ErrorInClearingEventsWithConfirmation THEN
+	F_ClearAllEvents := -10005;
+ELSIF EventsNotComfirmed THEN
+	F_ClearAllEvents := 10006;
+ELSE
+	F_ClearAllEvents := 0;
+END_IF
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

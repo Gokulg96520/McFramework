@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.14">
+  <POU Name="F_Confirm" Id="{326d2fcd-bc17-4501-977f-e3da2a8e8880}" SpecialFunc="None">
+    <Declaration><![CDATA[(*Confirm the raised alarm
+	Return Type is HRESULT  0-> Success 
+						   	10003-> Alarm Initialized without confirmation
+							10004 -> Alarm Not Raised 
+							10005 -> Alarm already confirmed
+						   -10003 -> HRESULT FAILED (TcAlarms.Confirm Returned a Error) *)
+{attribute 'hide_all_locals'}						  
+FUNCTION F_Confirm : HRESULT;
+VAR_IN_OUT
+	Alarm : FB_TcAlarm; //Alarm to be raised
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF Alarm.bActive OR Alarm.bRaised THEN
+	IF Alarm.eConfirmationState = TcEventConfirmationState.WaitForConfirmation THEN
+		IF FAILED(Alarm.Confirm(0)) THEN
+			F_Confirm := -10003;
+			RETURN;
+		ELSE
+			F_Confirm := 0;
+		END_IF
+	ELSIF Alarm.eConfirmationState = TcEventConfirmationState.NotSupported  THEN
+		F_Confirm := 10003;	
+	ELSIF Alarm.eConfirmationState = TcEventConfirmationState.Confirmed  THEN
+		F_Confirm := 10005;
+	END_IF
+ELSE
+	F_Confirm := 10004;
+END_IF
+
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

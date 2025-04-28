@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.14">
+  <POU Name="PRG_TEST" Id="{cb21ee53-cae2-46b9-9929-c0b774c55f6a}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_TEST
+VAR
+	fbEventLoggerTest : FB_EventLogger_Test;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[TcUnit.RUN();]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
